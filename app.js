@@ -1,14 +1,32 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const createError			 = require("http-errors");
+const express				 = require("express");
+const path					 = require("path");
+const favicon				 = require("serve-favicon");
+const cookieParser			 = require("cookie-parser");
+const logger				 = require("morgan");
+const bodyParser			 = require("body-parser");
+const passport				 = require("passport");
+const passporLocalMongoose	 = require("passport-local-mongoose");
+const User 					 = require("./models/user");
+const session				 = require("express-session");
+const mongoose				 = require("mongoose");
 
-const indexRouter 		=require('./routes/index');
-const posts 			=require('./routes/posts');
-const reviews 			=require('./routes/reviews');
+
+// require routes
+const indexRouter 			 =require('./routes/index');
+const posts 				 =require('./routes/posts');
+const reviews 				 =require('./routes/reviews');
 
 const app = express();
+
+// connect to the database port for mongodb is 27017
+mongoose.connect("mongodb://localhost:27017/surf-shop", { useNewUrlParser: true, useUnifiedTopology: true});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+ console.log("connected to database");
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,7 +38,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// routes
+
+// configure passport and sessions
+app.use(session({
+  secret: 'tazo buzo',
+  resave: false,
+  saveUninitialized: true
+}));
+
+// CHANGE: USE "createStrategy" INSTEAD OF "authenticate"
+// before bracket part comes from passport and the bracket part comes from passport local mongoose
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+
+// mount routes
 app.use('/', indexRouter);
 app.use("/posts", posts);
 app.use("/posts/:id/reviews", posts);
