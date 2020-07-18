@@ -2,7 +2,10 @@ const express 	= require('express');
 const router	= express.Router();
 
 // controller
-const {postRegister }	= require("../controllers/index");
+const {postRegister, postLogin, getLogout }	= require("../controllers/index");
+// using error middleware
+// js knows and looks for a file name with index we can do it for controllers above also
+const {errorHandler}	= require("../middleware");
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -15,7 +18,7 @@ router.get('/register', (req, res, next) => {
 });
 
 /* post /register */
-router.post('/register', postRegister);
+router.post('/register', errorHandler(postRegister));
 
 /* GET /login */
 router.get('/login', (req, res, next) => {
@@ -23,13 +26,14 @@ router.get('/login', (req, res, next) => {
 });
 
 /* POST /login */
-router.post('/login', (req, res, next) => {
-  res.send("reached login page");
-});
+router.post('/login', postLogin);
+
+// logout 
+router.get('/logout', getLogout);
 
 /* GET /profile */
-router.get('/profile', (req, res, next) => {
-  res.send("reached login page");
+router.get('/profile',(req, res, next) => {
+  res.send("reached profile page");
 });
 
 /* update /profile */
