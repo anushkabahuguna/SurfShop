@@ -1,0 +1,21 @@
+<h1>Create New post</h1>
+<form action="/posts" method="POST" enctype="multipart/form-data">
+	<div>
+		<input type="text" placeholder="Title" name="post[title]">
+	</div>
+	<div>
+		<input type="text" placeholder="Price" name="post[price]">
+	</div>
+	<div>
+		<input type="file" accept="image/*" name ="images" multiple />
+	</div>
+	<div>
+		<textarea name="post[description]"  placeholder="Description"></textarea>
+	</div>
+	<div>
+		<input type="text" placeholder="Location" name="post[location]">
+	</div>
+	
+	<input type="submit">
+	
+</form>

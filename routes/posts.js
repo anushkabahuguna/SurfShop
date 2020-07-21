@@ -1,39 +1,38 @@
 const express = require('express');
 const router = express.Router();
+const multer = require("multer");
+const upload = multer({"dest" : "uploads/"});
+const {asyncErrorHandler}	=	require("../middleware");
+const { postIndex,
+	   postNew, 
+	   postCreate,
+	   postShow, 
+	   postEdit,
+	   postUpdate,
+	   postDestroy
+	}	=	require("../controllers/posts");
 
 // get posts index /posts
-router.get('/', (req, res, next) => {
-  res.send("reached");
-});
+router.get('/', asyncErrorHandler(postIndex));
 
 // /posts/new
-router.get('/new', (req, res, next) => {
-  res.send("reached");
-});
+// here we dont have error handler function becuase this function does not use asynce if error occurs then its 
+// handled by the error handler in app.js(see at last).
+router.get('/new', postNew);
 
 // create   /posts
-router.post('/', (req, res, next) => {
-  res.send("reached");
-});
+router.post('/', upload.array("images", 4),  asyncErrorHandler(postCreate));
 
 // show  /posts/:id
-router.get('/:id', (req, res, next) => {
-  res.send("reached");
-});
+router.get('/:id',asyncErrorHandler(postShow));
 
 // edit
-router.get('/:id/edit', (req, res, next) => {
-  res.send("reached");
-});
+router.get('/:id/edit', asyncErrorHandler(postEdit));
 // update
-router.put('/:id', (req, res, next) => {
-  res.send("reached");
-});
+router.put('/:id', asyncErrorHandler(postUpdate));
 
 // delete
-router.delete('/:id', (req, res, next) => {
-  res.send("reached");
-});
+router.delete('/:id', asyncErrorHandler(postDestroy));
 
 
 

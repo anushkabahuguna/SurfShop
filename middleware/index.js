@@ -1,7 +1,7 @@
 // creating a middleware to catch promise/async errors (All)
 // error handler takes async function as argument
 module.exports	= {
-	errorHandler	: (fn)=>
+	asyncErrorHandler	: (fn)=>
 		(req, res, next) =>{
 // 			this returns a thenable promise ( a promise that can use .then)
 			Promise.resolve(fn(req, res, next))

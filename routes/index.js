@@ -5,7 +5,7 @@ const router	= express.Router();
 const {postRegister, postLogin, getLogout }	= require("../controllers/index");
 // using error middleware
 // js knows and looks for a file name with index we can do it for controllers above also
-const {errorHandler}	= require("../middleware");
+const {asyncErrorHandler}	= require("../middleware");
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -18,7 +18,7 @@ router.get('/register', (req, res, next) => {
 });
 
 /* post /register */
-router.post('/register', errorHandler(postRegister));
+router.post('/register', asyncErrorHandler(postRegister));
 
 /* GET /login */
 router.get('/login', (req, res, next) => {
