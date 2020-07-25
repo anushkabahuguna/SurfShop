@@ -50,6 +50,8 @@ module.exports	= {
 	},
 // 	update
 	async postUpdate(req, res, next){
+// 		handle deletion of images
+// 		handle updation of images (make sure the maximum size is four)
 		await Post.findByIdAndUpdate(req.params.id, req.body.post);
 		res.redirect("/posts/" + req.params.id);
 	},

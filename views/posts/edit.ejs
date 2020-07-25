@@ -1,12 +1,24 @@
 <h1>
 	Edit <%= post.title %>
 </h1>
-<form action="/posts/<%= post.id %>?_method=PUT" method="POST">
+<form action="/posts/<%= post.id %>?_method=PUT" method="POST" id="postEditForm">
 	<div>
 		<input type="text" value="<%= post.title %>" name="post[title]">
 	</div>
 	<div>
 		<input type="text" value="<%= post.price %>" name="post[price]">
+	</div>
+	<div>
+		<div>
+			<% post.images.forEach(function(image, i){ %>	
+			<img src="<%= image.url %>" alt="image" width="200px" />
+			<!-- we cant have more than one unique ids we have to give different to each image -->
+			<label for="image<%= i %>">Delete?</label>
+			<input type="checkbox" name="deleteImage" class="imageDeleteCheckox" id="image<%= i %>" 
+			value="<%= image.public_id %>">
+			<% }); %>
+		</div>
+		<input type="file" id="imageUpload" accept="image/*" name ="images" multiple />
 	</div>
 	<div>
 		<textarea name="post[description]"><%= post.description %></textarea>
@@ -18,3 +30,52 @@
 	<input type="submit">
 	
 </form>
+
+
+
+<!-- handle our photos edit -->
+<!-- compare uploaded images existing images and deleted images -->
+<!-- we will add an id to our file upload to check the no. of photos being uploaded -->
+
+<script>
+	
+// 	listen for submittion of the form
+	let postEditForm	=	document.getElementById("postEditForm");
+	
+// 	add a submit listener to it
+postEditForm.addEventListener("submit", function(event){
+
+	// 	find length of uploaded images
+		let images	=	document.getElementById("imageUpload");
+		let imageUploads   = 	images.files.length;
+
+	// 	find total number of existing images
+		let existingImgs	=	document.querySelectorAll(".imageDeleteCheckox").length;
+
+	// 	find total number of potential deletions
+		let imgDeletion		= 	document.querySelectorAll(".imageDeleteCheckox:checked").length;
+	
+	//  figure out if the form can be submitted 
+	let newTotal	=	existingImgs - imgDeletion + imageUploads
+		if(newTotal > 4)
+			{
+				event.preventDefault();
+				let removalAmt	=	newTotal-4
+				if(removalAmt == 1)
+					{
+						alert(`you need to remove atleast ${removalAmt}  image!`);
+					}
+				else{
+					alert(`you need to remove atleast ${removalAmt}  images!`);
+				}
+			}
+
+});
+	
+
+	
+	
+</script>
+
+
+
