@@ -1,5 +1,7 @@
-const Post			= require("../models/post");
-const cloudinary	= require("cloudinary");
+const Post				= require("../models/post");
+const mbxGeocoding  	= require('@mapbox/mapbox-sdk/services/geocoding');
+const geocodingClient   = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
+const cloudinary		= require("cloudinary");
 cloudinary.config({
 	cloud_name : "caracloud28",
 	api_key	   : "888796778459759",
@@ -29,11 +31,21 @@ module.exports	= {
 			});
 		}
 		
+// 		here we will convert our location into coordinates and 
+		let response	=	await geocodingClient.forwardGeocode({
+								  query: req.body.post.location,
+								  limit: 1
+								})
+							 .send();
+		
+// 		assign it to our coordinates array in our new post
+		req.body.post.coordinates	=	response.body.features[0].geometry.coordinates;
+		
 		// req.body to create a new post
 		// let post=	await Post.create(req.body);
 		// console.log(req.body);
 // 		if we used only req.body also it would work becuase req.body only containe the data from post method
-			let post=	await Post.create(req.body.post);
+		let post=	await Post.create(req.body.post);
 		res.redirect("/posts/" + post.id);	
 		// res.redirect(`/posts/${post.id}`);	
 
@@ -90,15 +102,28 @@ module.exports	= {
 		  }
 		}
 		
+// 	check if the post was updated with the location
+	if(post.location !== req.body.post.location)
+		{
+			let response = await geocodingClient.forwardGeocode({
+								query: req.body.post.location,
+								limit: 1
+							})
+							.send();
+			
+			post.coordinates	=	response.body.features[0].geometry.coordinates;
+			post.location		=	req.body.post.location;
+
+		}
+		
 // 	update the post with any new properties
 	
 	post.title			=	req.body.post.title;
 	post.description	=	req.body.post.description;
 	post.price			=	req.body.post.price;
-	post.location		=	req.body.post.location;
+	
 		
 // 	save the updated post to db IMPORTANT STEP
-	
 	post.save();
 		
 // 	redirect to show page

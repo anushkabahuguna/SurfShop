@@ -11,8 +11,7 @@ const postSchema	=new Schema({
 		public_id : String
 	}],
 	location		: String,
-	lat				: Number,
-	lon				: Number,
+	coordinates		: Array,
 	author			: {
 						type: Schema.Types.ObjectId,
 						ref : "User"
