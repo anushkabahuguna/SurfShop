@@ -50,14 +50,72 @@ module.exports	= {
 	},
 // 	update
 	async postUpdate(req, res, next){
-// 		handle deletion of images
-// 		handle updation of images (make sure the maximum size is four)
-		await Post.findByIdAndUpdate(req.params.id, req.body.post);
-		res.redirect("/posts/" + req.params.id);
+		
+// 		find the post by id
+		let post	=	await Post.findById(req.params.id);
+		
+// 		check if there are any images for deletion
+		if(req.body.deleteImages && req.body.deleteImages.length)
+			{
+// 				assign deleteImages from req.body to its own variable
+				let deleteImages	=	req.body.deleteImages;
+				
+// 				loop over deleteImages( we use for of function for async await)
+				for(const public_id of deleteImages)
+				{
+// 					delete images from cloudinary
+					await cloudinary.v2.uploader.destroy(public_id);
+					
+// 					delete images from post.images
+					for(const image of post.images){
+						if(public_id === image.public_id){
+							let index	=	post.images.indexOf(image);
+							post.images.splice(index, 1);
+						}
+					}
+				}
+				
+			}
+// 	check if there are any new images to upload
+		if(req.files)
+		{
+// 			upload images
+			for(const file of req.files){
+			let image = await cloudinary.v2.uploader.upload(file.path);
+// 			add images to post.images array
+			post.images.push({
+				url : image.secure_url,
+				public_id : image.public_id
+			});
+		  }
+		}
+		
+// 	update the post with any new properties
+	
+	post.title			=	req.body.post.title;
+	post.description	=	req.body.post.description;
+	post.price			=	req.body.post.price;
+	post.location		=	req.body.post.location;
+		
+// 	save the updated post to db IMPORTANT STEP
+	
+	post.save();
+		
+// 	redirect to show page
+	res.redirect("/posts/" + post.id);
+		
 	},
 // 	destroy
 	async postDestroy(req, res, next){
-		await Post.findByIdAndRemove(req.params.id);
+		let post	=	await Post.findById(req.params.id);
+		
+// 		iterate over post.images to delete from cloudinary 
+		for(const image of post.images){
+			
+			await cloudinary.v2.uploader.destroy(image.public_id);
+			
+		}
+		await post.remove();
 		res.redirect("/posts");
 	}
 

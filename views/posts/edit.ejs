@@ -1,7 +1,7 @@
 <h1>
 	Edit <%= post.title %>
 </h1>
-<form action="/posts/<%= post.id %>?_method=PUT" method="POST" id="postEditForm">
+<form action="/posts/<%= post.id %>?_method=PUT" method="POST" id="postEditForm" enctype="multipart/form-data">
 	<div>
 		<input type="text" value="<%= post.title %>" name="post[title]">
 	</div>
@@ -14,7 +14,7 @@
 			<img src="<%= image.url %>" alt="image" width="200px" />
 			<!-- we cant have more than one unique ids we have to give different to each image -->
 			<label for="image<%= i %>">Delete?</label>
-			<input type="checkbox" name="deleteImage" class="imageDeleteCheckox" id="image<%= i %>" 
+			<input type="checkbox" name="deleteImages[]" class="imageDeleteCheckox" id="image<%= i %>" 
 			value="<%= image.public_id %>">
 			<% }); %>
 		</div>
@@ -55,7 +55,7 @@ postEditForm.addEventListener("submit", function(event){
 	// 	find total number of potential deletions
 		let imgDeletion		= 	document.querySelectorAll(".imageDeleteCheckox:checked").length;
 	
-	//  figure out if the form can be submitted 
+	//  figure out if the form can be submgit itted 
 	let newTotal	=	existingImgs - imgDeletion + imageUploads
 		if(newTotal > 4)
 			{
@@ -63,10 +63,10 @@ postEditForm.addEventListener("submit", function(event){
 				let removalAmt	=	newTotal-4
 				if(removalAmt == 1)
 					{
-						alert(`you need to remove atleast ${removalAmt}  image!`);
+						alert(`you need to remove atleast ${removalAmt} more image!`);
 					}
 				else{
-					alert(`you need to remove atleast ${removalAmt}  images!`);
+					alert(`you need to remove atleast ${removalAmt} more images!`);
 				}
 			}
 
