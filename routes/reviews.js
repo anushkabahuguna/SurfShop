@@ -1,30 +1,11 @@
 const express = require('express');
 const router = express.Router({ mergeParams : true});
 
-// home page index /posts/:id/reviews
-router.get('/', (req, res, next) => {
-  res.send("reached");
-});
-
-// /posts/:id/reviews/new
-// router.get('/new', (req, res, next) => {
-//   res.send("reached");
-// });
-
 // create   /posts/:id/reviews
 router.post('/', (req, res, next) => {
   res.send("reached");
 });
 
-// show  /posts/:id/reviews/:id
-router.get('/:review_id', (req, res, next) => {
-  res.send("reached");
-});
-
-// edit
-router.get('/review_:id/edit', (req, res, next) => {
-  res.send("reached");
-});
 // update
 router.put('/:review_id', (req, res, next) => {
   res.send("reached");
@@ -34,7 +15,6 @@ router.put('/:review_id', (req, res, next) => {
 router.delete('/:review_id', (req, res, next) => {
   res.send("reached");
 });
-
 
 
 module.exports = router;

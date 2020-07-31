@@ -13,12 +13,12 @@ module.exports	= {
 	async postIndex(req, res, next){
 		
 			let posts	= await Post.find({});
-			res.render("posts/index", {posts});
+			res.render("posts/index", {posts, title: "Index Page"});
 // 		in es6 posts : posts can simply be written as posts
 	},
 // 	new post
 	postNew(req,res, next){
-		res.render("posts/new");
+		res.render("posts/new", {title: "New Post"});
 	},
 	async postCreate(req, res, next){
 		req.body.post.images = [];
@@ -46,6 +46,7 @@ module.exports	= {
 		// console.log(req.body);
 // 		if we used only req.body also it would work becuase req.body only containe the data from post method
 		let post=	await Post.create(req.body.post);
+		req.session.success = "Post created successfully";
 		res.redirect("/posts/" + post.id);	
 		// res.redirect(`/posts/${post.id}`);	
 
@@ -58,7 +59,7 @@ module.exports	= {
 // 	edit 
 	async postEdit(req, res, next){
 		let post = await Post.findById(req.params.id);
-		res.render("posts/edit", {post});
+		res.render("posts/edit", {post, title : "Edit Post"});
 	},
 // 	update
 	async postUpdate(req, res, next){
