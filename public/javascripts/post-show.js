@@ -39,3 +39,33 @@ var geojson = {
    .setHTML('<h3>' + post.title + '</h3><p>' + post.location + '</p>'))
    .addTo(map);
 // });
+
+
+// for toggling the edit form on and off
+
+	
+	// add a click listener for our edit button
+	$(".toggle-edit-form").on("click", function(){
+
+// 	toggle the text for button change to cancel or edit
+	
+	$(this).text() === "Edit" ? ($(this).text("Cancel")) : ($(this).text("Edit"));
+	
+//  toggle visibility of the form 
+		
+	$(this).siblings(".edit-review-form").toggle();
+		
+	});
+
+
+// here we will add code for clear button
+// add click listener to clear the rating for new and edit
+$(".clear-rating").click(function(){
+	$(this).siblings(".input-no-rate").click();
+});
+
+
+
+
+
+

@@ -1,12 +1,8 @@
-body {
-        margin: 0;
-        padding: 0;
-     }
-
-     #map {
+#map
+{
         width: 350px;
 		height:200px;
-     }
+}
 	
 .marker {
   background-image: url('/images/mapbox-icon.png');
@@ -21,7 +17,19 @@ body {
   max-width: 200px;
 }
 
+/* make our class invisible initially */
+.edit-review-form{
+	display: none;
+}
+
+
 .mapboxgl-popup-content {
   text-align: center;
   font-family: 'Open Sans', sans-serif;
 }
+
+.clear-rating{
+	display : block;
+}
+
+
