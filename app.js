@@ -12,6 +12,8 @@ const User = require('./models/user');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
+// const seedPosts 	= require("./seeds");
+// seedPosts();
 
 // require routes
 const index 	= require('./routes/index');
@@ -85,8 +87,9 @@ app.use('/posts', posts);
 app.use('/posts/:id/reviews', reviews);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  const err = new Error('Not Found');
+// here i added err as param to remove my nort found error on refreshing page
+app.use(function(err,req, res, next) {
+  // const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

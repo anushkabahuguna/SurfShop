@@ -12,7 +12,13 @@ module.exports	= {
 // 	post index
 	async postIndex(req, res, next){
 		
-			let posts	= await Post.find({});
+// 		change .find() to .paginate();
+			let posts	= await Post.paginate({},{
+				page : req.query.page || 1,
+				limit : 10
+			});
+		posts.page = Number(posts.page);
+// 		here we change this value to number so we can use it in our template
 			res.render("posts/index", {posts, title: "Index Page"});
 // 		in es6 posts : posts can simply be written as posts
 	},

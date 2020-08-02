@@ -1,0 +1,22 @@
+<!-- WE MOVED THIS CODE IN PARTIAL TO USE IT AGAIN TO HAVE A DRY CODE -->
+<!-- add page number -->
+<div style="margin: 20px 0;">
+	<!-- if we are on page 1 this will give 0 which will be false for all other pages this will give a truthy value -->
+	<% if(posts.page-1){ %>
+		<a href="/posts?page=<%= posts.page-1 %>">Previous Page</a>
+	<% } %>
+	
+	<!-- here we will crate a loop to display all numbers along with them linking to respective pages -->
+	<% for(let i=1; i<=posts.pages;i++){ %>
+		
+		<a href="/posts?page=<%= i %>"
+		   <%= i === posts.page ? "style = color:#000;" : ""  %>
+		   ><%= i %></a>		
+	
+	<% } %>
+	
+	<% if((posts.page)<posts.pages){ %>
+		<a href="/posts?page=<%= posts.page+1 %>">Next Page</a>
+	<% } %>
+	
+</div>
