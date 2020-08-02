@@ -23,7 +23,11 @@ const postSchema	=new Schema({
 						type: Schema.Types.ObjectId,
 						ref : "Review"
 		
-					}]
+					}],
+	avgRating      : {
+		type : Number,
+		default : 0
+	}
 });
 
 postSchema.pre("remove", async function(){
@@ -33,6 +37,33 @@ postSchema.pre("remove", async function(){
 		}
 	});
 });
+// cant use arrow function here as we have to use "this"
+postSchema.methods.calculateAvgRating = function(){
+	
+	let ratingsTotal = 0;
+	
+// 	run the code only if reviews exist
+	if(this.reviews.length){
+		this.reviews.forEach(review =>{
+		ratingsTotal+=review.rating;
+		});
+// 		rounding to two digits
+	
+	this.avgRating = Math.round((ratingsTotal/this.reviews.length)*10)/10;
+	
+	}
+	else{
+		this.avgRating =ratingsTotal;
+	}
+	const floorRating = Math.floor(this.avgRating);
+	this.save();
+	
+	return floorRating;
+}
+
+
+
+
 
 	postSchema.plugin(mongoosePaginate);
 

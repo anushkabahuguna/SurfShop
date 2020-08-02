@@ -13,6 +13,30 @@
 	<%= post.location %>
 </div>
 <div>
+ <!-- here we will create a loop to create five stars and will show the avg rating -->
+	
+<% for(let i=0;i<5;i++){ %>
+	
+	<% if(i<floorRating){ %>
+	
+		<!-- display a full star -->
+	<i class="fa fa-star" aria-hidden="true"></i>
+	<!-- example if avg = 3.75 then i will be 3 so this "else if" will run -->
+	<% }else if((post.avgRating-i)>0 && (post.avgRating-i)<1 ){ %>
+	<!-- display half star -->
+	<i class="fa fa-star-half-o" aria-hidden="true"></i>
+
+	<% }else{ %>
+	<!-- display empty star -->
+	<i class="fa fa-star-o" aria-hidden="true"></i>
+	
+	
+<% }} %>
+<%= `${post.avgRating} star${post.avgRating=== 1 ? "" : "s"}` %>
+	
+	
+</div>
+<div>
 	<% post.images.forEach(function(image){ %>
 	<img src="<%= image.url %>" alt="surf board image" width="200px">
 		
