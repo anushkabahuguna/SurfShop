@@ -3,6 +3,7 @@ const Schema						= mongoose.Schema;
 const Review						= require("./review");
 const mongoosePaginate				= require("mongoose-paginate");
 
+// we are converting it to a geo json data for cluster maps
 
 const postSchema	=new Schema({
 	title 			: String,
@@ -13,7 +14,23 @@ const postSchema	=new Schema({
 		public_id : String
 	}],
 	location		: String,
-	coordinates		: Array,
+	geometry		: {
+				
+						type : {
+							type : String,
+							enum : ["Point"],
+							required : true
+						},
+		
+						coordinates : {
+							type : [Number],
+							required : true
+						}
+		
+					  },
+	properties		: {
+						description : String
+					},
 	author			: {
 						type: Schema.Types.ObjectId,
 						ref : "User"

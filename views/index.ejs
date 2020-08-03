@@ -1,4 +1,24 @@
 <% layout('layouts/boilerplate') -%>
 
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+
+<!-- map comes here -->
+
+<div id="map">
+	
+</div>
+
+<script>
+// 	this comes from js script of mapbox in boilerplate
+	mapboxgl.accessToken = "<%= mapboxToken %>";
+// 	mapboxgl accepts this format
+	var posts= {
+		features : <%- JSON.stringify(posts) %>
+	};
+	
+</script>
+<script src="/javascripts/allPostsClusters.js">
+</script>
+
+

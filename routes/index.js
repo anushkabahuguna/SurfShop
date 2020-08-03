@@ -2,15 +2,13 @@ const express 	= require('express');
 const router	= express.Router();
 
 // controller
-const {postRegister, postLogin, getLogout }	= require("../controllers/index");
+const {landingPage, postRegister, postLogin, getLogout }	= require("../controllers/index");
 // using error middleware
 // js knows and looks for a file name with index we can do it for controllers above also
 const {asyncErrorHandler}	= require("../middleware");
 
-/* GET home page. */
-router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Surf Shop Home' });
-});
+/* GET home/landing page. */
+router.get('/', asyncErrorHandler(landingPage));
 
 /* GET /register */
 router.get('/register', (req, res, next) => {

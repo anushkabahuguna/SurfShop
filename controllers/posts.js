@@ -1,6 +1,7 @@
 const Post				= require("../models/post");
 const mbxGeocoding  	= require('@mapbox/mapbox-sdk/services/geocoding');
-const geocodingClient   = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
+const mapboxToken	    = process.env.MAPBOX_TOKEN;
+const geocodingClient   = mbxGeocoding({ accessToken: mapboxToken });
 const cloudinary		= require("cloudinary");
 cloudinary.config({
 	cloud_name : "caracloud28",
@@ -15,11 +16,16 @@ module.exports	= {
 // 		change .find() to .paginate();
 			let posts	= await Post.paginate({},{
 				page : req.query.page || 1,
-				limit : 10
+				limit : 10,
+				sort : {
+					"_id" : -1
+				}
+				// we can write this as sort : "-_id" also
+				// sort by id = sort by date created
 			});
 		posts.page = Number(posts.page);
 // 		here we change this value to number so we can use it in our template
-			res.render("posts/index", {posts, title: "Index Page"});
+			res.render("posts/index", {posts, title: "Index Page", mapboxToken});
 // 		in es6 posts : posts can simply be written as posts
 	},
 // 	new post
@@ -45,13 +51,18 @@ module.exports	= {
 							 .send();
 		
 // 		assign it to our coordinates array in our new post
-		req.body.post.coordinates	=	response.body.features[0].geometry.coordinates;
+		req.body.post.geometry	=	response.body.features[0].geometry;
 		
 		// req.body to create a new post
 		// let post=	await Post.create(req.body);
 		// console.log(req.body);
 // 		if we used only req.body also it would work becuase req.body only containe the data from post method
-		let post=	await Post.create(req.body.post);
+		
+		let post = new Post(req.body.post);
+// 		we had to have a post id for setting the next property so we didnt use post. create but used the constructor syntax
+		post.properties.description = `<strong><a href="/posts/${post._id}">${post.title}</a></strong><p>${post.location}</p><p>${post.description.substring(0, 20)}...</p>`;
+		await post.save();
+		
 		req.session.success = "Post created successfully";
 		res.redirect("/posts/" + post.id);	
 		// res.redirect(`/posts/${post.id}`);	
@@ -70,7 +81,6 @@ module.exports	= {
 			 }
 			});
 		const floorRating = post.calculateAvgRating();
-		let mapboxToken = process.env.MAPBOX_TOKEN;
 		res.render("posts/show", {post, mapboxToken, floorRating});
 	},
 // 	edit 
@@ -129,7 +139,7 @@ module.exports	= {
 							})
 							.send();
 			
-			post.coordinates	=	response.body.features[0].geometry.coordinates;
+			post.geometry	=	response.body.features[0].geometry;
 			post.location		=	req.body.post.location;
 
 		}
@@ -139,10 +149,11 @@ module.exports	= {
 	post.title			=	req.body.post.title;
 	post.description	=	req.body.post.description;
 	post.price			=	req.body.post.price;
+	post.properties.description = `<strong><a href="/posts/${post._id}">${post.title}</a></strong><p>${post.location}</p><p>${post.description.substring(0, 20)}...</p>`;
 	
 		
 // 	save the updated post to db IMPORTANT STEP
-	post.save();
+	await post.save();
 		
 // 	redirect to show page
 	res.redirect("/posts/" + post.id);

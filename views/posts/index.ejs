@@ -1,5 +1,8 @@
 <% layout('layouts/boilerplate') -%>
 <h1>Posts index</h1>
+<div id="map">
+	
+</div>
 
 <!-- pagination include -->
 <%- include("../partials/paginatePosts") %>
@@ -16,3 +19,16 @@
 
 <!-- pagination include -->
 <%- include("../partials/paginatePosts") %>
+
+<script>
+// 	this comes from js script of mapbox in boilerplate
+	mapboxgl.accessToken = "<%= mapboxToken %>";
+// 	mapboxgl accepts this format
+	var posts= {
+		features : <%- JSON.stringify(posts.docs) %>
+	};
+	
+</script>
+
+<script src="/javascripts/allPostsClusters.js">
+</script>
