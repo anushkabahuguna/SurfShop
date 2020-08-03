@@ -2,12 +2,7 @@ const Post				= require("../models/post");
 const mbxGeocoding  	= require('@mapbox/mapbox-sdk/services/geocoding');
 const mapboxToken	    = process.env.MAPBOX_TOKEN;
 const geocodingClient   = mbxGeocoding({ accessToken: mapboxToken });
-const cloudinary		= require("cloudinary");
-cloudinary.config({
-	cloud_name : "caracloud28",
-	api_key	   : "888796778459759",
-	api_secret : process.env.CLOUDINARY_SECRET
-});
+const { cloudinary } = require('../cloudinary');
 
 module.exports	= {
 // 	post index
@@ -36,10 +31,9 @@ module.exports	= {
 		req.body.post.images = [];
 // 		cloudinary image
 		for(const file of req.files){
-			let image = await cloudinary.v2.uploader.upload(file.path);
 			req.body.post.images.push({
-				url : image.secure_url,
-				public_id : image.public_id
+				url : file.secure_url,
+				public_id : file.public_id
 			});
 		}
 		
@@ -121,11 +115,10 @@ module.exports	= {
 		{
 // 			upload images
 			for(const file of req.files){
-			let image = await cloudinary.v2.uploader.upload(file.path);
 // 			add images to post.images array
 			post.images.push({
-				url : image.secure_url,
-				public_id : image.public_id
+				url : file.secure_url,
+				public_id : file.public_id
 			});
 		  }
 		}

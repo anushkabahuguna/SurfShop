@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const multer = require("multer");
-const upload = multer({"dest" : "uploads/"});
+const { cloudinary, storage } = require('../cloudinary');
+const upload = multer({ storage : storage}); 
+// this storage helps to upload automatically without using cloudinary v2.upload sentence
 const {asyncErrorHandler}	=	require("../middleware");
 const { postIndex,
 	   postNew, 
-	   postCreate,
+	   postCreate, 
 	   postShow, 
 	   postEdit,
 	   postUpdate,
