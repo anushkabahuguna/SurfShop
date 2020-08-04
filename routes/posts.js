@@ -4,7 +4,7 @@ const multer = require("multer");
 const { cloudinary, storage } = require('../cloudinary');
 const upload = multer({ storage : storage}); 
 // this storage helps to upload automatically without using cloudinary v2.upload sentence
-const {asyncErrorHandler}	=	require("../middleware");
+const {asyncErrorHandler, isLoggedIn, isAuthor }	=	require("../middleware");
 const { postIndex,
 	   postNew, 
 	   postCreate, 
@@ -20,21 +20,21 @@ router.get('/', asyncErrorHandler(postIndex));
 // /posts/new
 // here we dont have error handler function becuase this function does not use asynce if error occurs then its 
 // handled by the error handler in app.js(see at last).
-router.get('/new', postNew);
+router.get('/new', isLoggedIn, postNew);
 
 // create   /posts
-router.post('/', upload.array("images", 4),  asyncErrorHandler(postCreate));
+router.post('/', isLoggedIn , upload.array("images", 4),  asyncErrorHandler(postCreate));
 
 // show  /posts/:id
 router.get('/:id',asyncErrorHandler(postShow));
 
 // edit
-router.get('/:id/edit', asyncErrorHandler(postEdit));
+router.get('/:id/edit', isLoggedIn, asyncErrorHandler(isAuthor), asyncErrorHandler(postEdit));
 // update
-router.put('/:id', upload.array("images", 4), asyncErrorHandler(postUpdate));
+router.put('/:id', isLoggedIn, asyncErrorHandler(isAuthor), upload.array("images", 4), asyncErrorHandler(postUpdate));
 
 // delete
-router.delete('/:id', asyncErrorHandler(postDestroy));
+router.delete('/:id', isLoggedIn, asyncErrorHandler(isAuthor), asyncErrorHandler(postDestroy));
 
 
 

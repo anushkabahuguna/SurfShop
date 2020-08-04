@@ -30,11 +30,9 @@
 
 
 
-
-
-
-
 const Review = require('../models/review');
+const User = require('../models/user');
+const Post = require('../models/post');
 
 module.exports = {
 	asyncErrorHandler: (fn) =>
@@ -49,5 +47,37 @@ module.exports = {
 		}
 		req.session.error = 'Bye bye';
 		return res.redirect('/');
+	},
+	isLoggedIn: (req, res, next) => {
+		
+		if(req.isAuthenticated()){
+			return next();
+		}
+		
+		req.session.error = "You need to be logged in to do that";
+		req.session.redirectTo = req.originalUrl;
+// 		this above line tells the login page to take them to the original url they were trying to access
+// 		but couldnt do so due to not being logged in
+		res.redirect("/login");
+		
+	},
+	
+	isAuthor : async (req, res, next) => {
+	
+	const post = await Post.findById(req.params.id);
+	if( post.author.equals(req.user._id))
+		{
+// 				we have to pass this in order to next function in middleware chain
+			res.locals.post = post;
+			return next();
+		}
+		
+		req.session.error = "Access Denied";
+		res.redirect("back");
+	
 	}
+	
+	
+	
 }
+

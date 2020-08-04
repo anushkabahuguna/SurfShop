@@ -45,17 +45,18 @@
 
 <div id='map'></div>
 
-<div>
-	<a href="/posts/<%= post.id %>/edit">	<button>
-			Edit
-	</button></a>
-</div>
-<div>
-	<form action="/posts/<%= post.id %>?_method=DELETE" method="POST">
-		<input value="Delete" type="submit">
-	</form>
-</div>
-
+<% if(currentUser && currentUser._id.equals(post.author)){ %>
+	<div>
+		<a href="/posts/<%= post.id %>/edit">	<button>
+				Edit
+		</button></a>
+	</div>
+	<div>
+		<form action="/posts/<%= post.id %>?_method=DELETE" method="POST">
+			<input value="Delete" type="submit">
+		</form>
+	</div>
+<% } %>
 
 
 <!-- HERE WE WILL CREATE A SPACE FOR OUR REVIEWS: -->

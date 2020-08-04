@@ -46,6 +46,7 @@ module.exports	= {
 		
 // 		assign it to our coordinates array in our new post
 		req.body.post.geometry	=	response.body.features[0].geometry;
+		req.body.post.author    =   req.user._id;
 		
 		// req.body to create a new post
 		// let post=	await Post.create(req.body);
@@ -79,14 +80,18 @@ module.exports	= {
 	},
 // 	edit 
 	async postEdit(req, res, next){
-		let post = await Post.findById(req.params.id);
-		res.render("posts/edit", {post, title : "Edit Post"});
+// 		since in middleware isAuthor we have defined post no need to define it again
+		// let post = await Post.findById(req.params.id);
+		// res.render("posts/edit", {post, title : "Edit Post"});
+		res.render("posts/edit", { title : "Edit Post"});
 	},
 // 	update
 	async postUpdate(req, res, next){
 		
 // 		find the post by id
-		let post	=	await Post.findById(req.params.id);
+		// let post	=	await Post.findById(req.params.id);
+// 		destructure post from res.locals already defined in middleware isAuthor
+		const {post} = res.locals;
 		
 // 		check if there are any images for deletion
 		if(req.body.deleteImages && req.body.deleteImages.length)
@@ -154,7 +159,8 @@ module.exports	= {
 	},
 // 	destroy
 	async postDestroy(req, res, next){
-		let post	=	await Post.findById(req.params.id);
+// 		coming from middlweare isAuthor
+		const{ post} 	=	res.locals;
 		
 // 		iterate over post.images to delete from cloudinary 
 		for(const image of post.images){

@@ -4,7 +4,10 @@ const Schema						=mongoose.Schema;
 
 
 const userSchema	=new Schema({
-	email	 : String,
+	email	 : {type : String,
+			   unique : true,
+			   required : true 
+			   },
 	// password : String,
 	// username : String, we dont put these as passport local mongoose handles the password by hashing and 
 	// putting a salt value and puts it in our user object

@@ -16,10 +16,7 @@ async function seedPosts() {
 				type: 'Point',
 				coordinates: [cities[random1000].longitude, cities[random1000].latitude],
 			},
-			author: {
-		    "_id" :"5f26bc91e761e11d127dbc5c",
-			"username" : "cara3"
-		  }
+			author: "5f2942c8c086e71915d59ee2",
 		}
 		let post = new Post(postData);
 // 		we had to have a post id for setting the next property so we didnt use post. create but used the constructor syntax
