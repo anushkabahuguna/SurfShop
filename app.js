@@ -6,7 +6,8 @@ const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+// we removed this line because in latest versions of express we dont need that
+// const bodyParser = require('body-parser');
 const passport = require('passport');
 const User = require('./models/user');
 const session = require('express-session');
@@ -23,7 +24,11 @@ const reviews = require('./routes/reviews');
 const app = express();
 
 // connect to the database
-mongoose.connect('mongodb://localhost:27017/surf-shop', { useNewUrlParser: true,  useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost:27017/surf-shop', {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useCreateIndex : true
+});
 mongoose.set('useCreateIndex', true);
 
 const db = mongoose.connection;
@@ -43,8 +48,8 @@ app.use(express.static('public'));
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));

@@ -29,7 +29,7 @@ router.post('/', isLoggedIn , upload.array("images", 4),  asyncErrorHandler(post
 router.get('/:id',asyncErrorHandler(postShow));
 
 // edit
-router.get('/:id/edit', isLoggedIn, asyncErrorHandler(isAuthor), asyncErrorHandler(postEdit));
+router.get('/:id/edit', isLoggedIn, asyncErrorHandler(isAuthor), postEdit);
 // update
 router.put('/:id', isLoggedIn, asyncErrorHandler(isAuthor), upload.array("images", 4), asyncErrorHandler(postUpdate));
 

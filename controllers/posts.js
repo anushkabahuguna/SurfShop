@@ -79,7 +79,7 @@ module.exports	= {
 		res.render("posts/show", {post, mapboxToken, floorRating});
 	},
 // 	edit 
-	async postEdit(req, res, next){
+ postEdit(req, res, next){
 // 		since in middleware isAuthor we have defined post no need to define it again
 		// let post = await Post.findById(req.params.id);
 		// res.render("posts/edit", {post, title : "Edit Post"});
