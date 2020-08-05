@@ -75,6 +75,59 @@ module.exports = {
 		req.session.error = "Access Denied";
 		res.redirect("back");
 	
+	},
+	
+	isValidPassword: async (req, res, next) => {
+		const { user } = await User.authenticate()(req.user.username, req.body.currentPassword)
+		if(user) { 
+			// add user to res.locals
+			res.locals.user = user;
+			// go to next middleware
+			next();
+		} else {
+			// flash an error
+			req.session.error = 'Incorrect Current Password!';
+			// short circuit the route middleware and redirect to /profile
+			return res.redirect('/profile');
+		}
+	},
+	
+	changePassword: async (req, res, next) => {
+		// destructure new password values from req.body object
+		const { 
+			newPassword,
+			passwordConfirmation
+		} = req.body;
+
+		
+		// check if new password values exist
+// 		suppose the user does not put password confirmation then he/she will be able to submit form because that client side code is never run so here we are saving ourselves becuase if password confirmation is not set up then password will not be changed
+// 		but we have to show them error to make sure they do password confirmation
+		if (newPassword && !passwordConfirmation) {
+		req.session.error = 'Missing password confirmation!';
+		return res.redirect('/profile');
+	} else if (newPassword && passwordConfirmation) {
+			// destructure user from res.locals
+			const { user } = res.locals;
+				// check if new passwords match
+				if (newPassword === passwordConfirmation) {
+					// set new password on user object
+					await user.setPassword(newPassword);
+					// go to next middleware
+					next();
+				} else {
+// 					this is the third time we are checking first two :client side we are doing this in case a tech savy 
+// 					person tries to submit form breaking client side code OR THEY CAN USE CURL ALSO SO WE SHOULD DO THIS...
+					// flash error
+					req.session.error = 'New passwords must match!';
+					// short circuit the route middleware and redirect to /profile
+					return res.redirect('/profile');
+				}
+		} else {
+			// go to next middleware
+// 			the user is not trying to change password but other things
+			next();
+		}
 	}
 	
 	
