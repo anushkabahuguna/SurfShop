@@ -11,7 +11,13 @@ const userSchema	=new Schema({
 	// password : String,
 	// username : String, we dont put these as passport local mongoose handles the password by hashing and 
 	// putting a salt value and puts it in our user object
-	image	 : String
+	image: {
+	secure_url: { type: String, default: '/images/default-profile.jpg' },
+	public_id: String
+}
+	
+	
+	
 // 	we dont need posts instead we can have posts model have an author
 	// posts	 : [
 	// 	{

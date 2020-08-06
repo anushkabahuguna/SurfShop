@@ -4,6 +4,8 @@ const Post		= require("../models/post");
 const mapboxToken = process.env.MAPBOX_TOKEN;
 // COMES WITH NEWER VERSIONS (INCLUDED WITH NODE NO NEED TO INSTALL)
 const util = require('util');
+const { cloudinary } = require("../cloudinary");
+const { deleteProfileImage } = require("../middleware");
 
 module.exports		=	{
 	
@@ -63,6 +65,13 @@ module.exports		=	{
 // POST /register
 async postRegister(req, res, next) {
 	try {
+// 		check if user uploaded a profile image
+		if(req.file)
+			{
+				const { secure_url, public_id} = req.file;
+				req.body.image = { secure_url, public_id }
+			}
+		
 		const user = await User.register(new User(req.body), req.body.password);
 		req.login(user, function(err) {
 			if (err) return next(err);
@@ -70,6 +79,7 @@ async postRegister(req, res, next) {
 			res.redirect('/');
 		});
 	} catch(err) {
+		deleteProfileImage(req);
 		const { username, email } = req.body;
 		let error = err.message;
 // 		ian got this code by using locus
@@ -147,32 +157,62 @@ async postRegister(req, res, next) {
 		res.render("profile", {posts, title: "User Profile"});
 	},
 	
+// 	async updateProfile(req, res, next) {
+// 		// destructure username and email from req.body
+// 		const {
+// 			username,
+// 			email
+// 		} = req.body;
+// 		// destructure user object from res.locals
+// // 		comes from middlweare chain had to make it local to access it anywhere in middleware chain
+// 		const { user } = res.locals;
+// 		// check if username or email need to be updated
+// 		if (username) user.username = username;
+// 		if (email) user.email = email;
+// 		if(req.file) {
+// // 			check if a profile image exists then delete it
+// 			if(user.image.secure_url) await cloudinary.v2.uploader.destroy(user.image.public_id);
+// 			const { secure_url, public_id} = req.file;
+			
+// 			user.image = { secure_url, public_id };
+			
+// 		}
+// 		// save the updated user to the database
+// 		await user.save();
+// 		// promsify req.login
+// // 		we have to login the user back with new password
+// // 		this passport method(req.login) requires a callback function but we are using async/await so we use util here to help us convert this in a promise
+// // 		here .bind(req) acts like .bind(this) , we do this to make sure that req.login has access to req object for logging in
+// // 		if we dont then we get saveuninitialized error 
+// 		const login = util.promisify(req.login.bind(req));
+// 		// log the user back in with new info
+// 		await login(user);
+// 		// redirect to /profile with a success flash message
+// 		req.session.success = 'Profile successfully updated!';
+// 		res.redirect('/profile');
+// 	}
+	
+	
+	
 	async updateProfile(req, res, next) {
-		// destructure username and email from req.body
-		const {
-			username,
-			email
-		} = req.body;
-		// destructure user object from res.locals
-// 		comes from middlweare chain had to make it local to access it anywhere in middleware chain
-		const { user } = res.locals;
-		// check if username or email need to be updated
-		if (username) user.username = username;
-		if (email) user.email = email;
-		// save the updated user to the database
-		await user.save();
-		// promsify req.login
-// 		we have to login the user back with new password
-// 		this passport method(req.login) requires a callback function but we are using async/await so we use util here to help us convert this in a promise
-// 		here .bind(req) acts like .bind(this) , we do this to make sure that req.login has access to req object for logging in
-// 		if we dont then we get saveuninitialized error 
-		const login = util.promisify(req.login.bind(req));
-		// log the user back in with new info
-		await login(user);
-		// redirect to /profile with a success flash message
-		req.session.success = 'Profile successfully updated!';
-		res.redirect('/profile');
+	const {
+		username,
+		email
+	} = req.body;
+	const { user } = res.locals;
+	if (username) user.username = username;
+	if (email) user.email = email;
+	if (req.file) {
+		if (user.image.public_id) await cloudinary.v2.uploader.destroy(user.image.public_id);
+		const { secure_url, public_id } = req.file;
+		user.image = { secure_url, public_id };
 	}
+	await user.save();
+	const login = util.promisify(req.login.bind(req));
+	await login(user);
+	req.session.success = 'Profile successfully updated!';
+	res.redirect('/profile');
+}
 
 	
 };

@@ -1,5 +1,8 @@
 const express 	= require('express');
 const router	= express.Router();
+const multer    = require("multer");
+const { storage } =require("../cloudinary");
+const upload = multer({storage});
 
 // controller
 const 
@@ -20,7 +23,8 @@ router.get('/', asyncErrorHandler(landingPage));
 router.get('/register',getRegister);
 
 /* post /register */
-router.post('/register',asyncErrorHandler(postRegister));
+// image comes from our imput tag with name ="image , multer picks image from there
+router.post('/register', upload.single("image"), asyncErrorHandler(postRegister));
 
 /* GET /login */
 router.get('/login',getLogin);
@@ -38,6 +42,7 @@ router.get('/profile', isLoggedIn, asyncErrorHandler(getProfile));
 /* PUT /profile */
 router.put('/profile',
 	isLoggedIn,
+	upload.single("image"), 
 	asyncErrorHandler(isValidPassword),
 	asyncErrorHandler(changePassword),
 	asyncErrorHandler(updateProfile)
