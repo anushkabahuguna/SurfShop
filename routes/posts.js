@@ -4,7 +4,7 @@ const multer = require("multer");
 const { storage } = require('../cloudinary');
 const upload = multer({ storage : storage}); 
 // this storage helps to upload automatically without using cloudinary v2.upload sentence
-const {asyncErrorHandler, isLoggedIn, isAuthor }	=	require("../middleware");
+const {asyncErrorHandler, isLoggedIn, isAuthor, searchAndFilterPosts }	=	require("../middleware");
 const { postIndex,
 	   postNew, 
 	   postCreate, 
@@ -15,7 +15,11 @@ const { postIndex,
 	}	=	require("../controllers/posts");
 
 // get posts index /posts
-router.get('/', asyncErrorHandler(postIndex));
+router.get(
+	'/',
+	asyncErrorHandler(searchAndFilterPosts),
+	asyncErrorHandler(postIndex)
+);
 
 // /posts/new
 // here we dont have error handler function becuase this function does not use asynce if error occurs then its 

@@ -7,9 +7,14 @@ const { cloudinary } = require('../cloudinary');
 module.exports	= {
 // 	post index
 	async postIndex(req, res, next){
-		
+// 		we will create a middleware for /posts to check if a search was made (req.query) or not 
+// 	 we will biuld a local object (dbQuery) and pass it on to middleware chain i.e. postIndex 
+		const { dbQuery } = res.locals;
+// 		if dbQuery empty then do show all posts else it will be a query search
+		delete res.locals.dbQuery;
+// 		NOTE : THIS DOES NOT DELETE OUR dbQuery variable defined here
 // 		change .find() to .paginate();
-			let posts	= await Post.paginate({},{
+			let posts	= await Post.paginate(dbQuery,{
 				page : req.query.page || 1,
 				limit : 10,
 				sort : {
@@ -20,6 +25,14 @@ module.exports	= {
 			});
 		posts.page = Number(posts.page);
 // 		here we change this value to number so we can use it in our template
+// 		check if post exists else say no results
+		if(!posts.docs.length && res.locals.query)
+			{
+				// WE ARE NOT REDIRECTING JUST MAKING A GET REQUEST AND RENDERING A PAGE IF THIS WOULD BE A POST OR
+// 				OR PUT REQUEST THEN WE WOULD USE REQ.SESSION
+// 				no session created here (simple get request)
+				res.locals.error = 'No results match that query.';
+			}
 			res.render("posts/index", {posts, title: "Index Page", mapboxToken});
 // 		in es6 posts : posts can simply be written as posts
 	},
@@ -75,7 +88,8 @@ module.exports	= {
 				 model : "User"
 			 }
 			});
-		const floorRating = post.calculateAvgRating();
+		// const floorRating = post.calculateAvgRating();
+		const floorRating = post.avgRating;
 		res.render("posts/show", {post, mapboxToken, floorRating});
 	},
 // 	edit 

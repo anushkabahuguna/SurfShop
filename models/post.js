@@ -78,11 +78,19 @@ postSchema.methods.calculateAvgRating = function(){
 	return floorRating;
 }
 
-
-
-
-
 	postSchema.plugin(mongoosePaginate);
+// adds a 2d sphere index to geometry field (goejson object)
+// used when doing filters like within 50 miles
+// makes searching easier ( mongo db)
+	postSchema.index({geometry : "2dsphere"});
 
 
 module.exports		=mongoose.model("Post", postSchema);
+
+
+
+
+
+
+
+

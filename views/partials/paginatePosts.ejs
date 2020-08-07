@@ -3,20 +3,37 @@
 <div style="margin: 20px 0;">
 	<!-- if we are on page 1 this will give 0 which will be false for all other pages this will give a truthy value -->
 	<% if(posts.page-1){ %>
-		<a href="/posts?page=<%= posts.page-1 %>">Previous Page</a>
+		<a href="<%= paginateUrl %><%= posts.page-1 %>">Previous Page</a>
 	<% } %>
 	
-	<!-- here we will crate a loop to display all numbers along with them linking to respective pages -->
-	<% for(let i=1; i<=posts.pages;i++){ %>
-		
-		<a href="/posts?page=<%= i %>"
-		   <%= i === posts.page ? "style = color:#000;" : ""  %>
-		   ><%= i %></a>		
-	
+	<% if( posts.pages > 1 && posts.docs.length) { %>
+		<!-- here we will crate a loop to display all numbers along with them linking to respective pages -->
+		<% for(let i=1; i<=posts.pages;i++){ %>
+
+			<a href="<%= paginateUrl %><%= i %>"
+			   <%= i === posts.page ? "style = color:#000;" : ""  %>
+			   ><%= i %></a>		
+
+		<% } %>
 	<% } %>
-	
+
 	<% if((posts.page)<posts.pages){ %>
-		<a href="/posts?page=<%= posts.page+1 %>">Next Page</a>
+		<a href="<%= paginateUrl %><%= posts.page+1 %>">Next Page</a>
 	<% } %>
-	
+
 </div>
+
+<!-- ============================== -->
+
+<!-- this will help in checking what type of request was made(with or without query) -->
+<!-- CREATED IN MIDDLEWARE AND PASSED ON BY LOCALS OBJECTS -->
+<!-- paginateUrl looks like : "/posts?page="  ?page= --> 
+<!-- paginateUrl looks like : "/posts?search=texas&loction=&?page="  ?&page= -->
+
+<!-- ============================== -->
+
+
+
+
+
+
