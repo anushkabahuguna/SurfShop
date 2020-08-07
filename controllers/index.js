@@ -12,9 +12,11 @@ module.exports		=	{
 // 	Get "/" index page
 	
 	async landingPage(req, res, next){
-		const posts = await Post.find({});
+// 		descending order
+		const posts = await Post.find({}).sort("-_id").exec();
+		const recentPosts = posts.slice(0,3);
 // 		we will pass our posts plus our mapbox token in the index page
-		res.render("index", {posts, mapboxToken, title: 'Surf Shop Home'});
+		res.render("index", {posts, mapboxToken, recentPosts, title: 'Surf Shop Home'});
 		
 	},
 	

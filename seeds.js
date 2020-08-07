@@ -19,7 +19,12 @@ async function seedPosts() {
 			},
 			price : random1000,
 			avgRating : random5,
-			author: "5f2942c8c086e71915d59ee2",
+			author: "5f2bbf9444fb452c13691b9a",
+			images : [
+				{
+					url: "https://res.cloudinary.com/devsprout/image/upload/v1561315599/surf-shop/surfboard.jpg"
+				}
+			]
 		}
 		let post = new Post(postData);
 // 		we had to have a post id for setting the next property so we didnt use post. create but used the constructor syntax
