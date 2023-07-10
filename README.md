@@ -10,7 +10,8 @@
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
 ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
 
-<b>Completed as part of the Udemy course ‘Code with Node’ by Ian Schoonover.</b>
-
 - This app features the ability to add and view surfs worldwide, with authentication and authorization using passportJS.
 - Users can search for surfboards by location, price, and ratings, and view locations using the Mapbox API.
+
+<em>Completed as part of the Udemy course ‘Code with Node’ by Ian Schoonover.</em>
+
