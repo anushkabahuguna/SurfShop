@@ -1,24 +1,16 @@
-A node.js app built with express and MongoDB
-RUN THE APP WITH NODEMON AND MONGODB SERVER.
-Done from the Udemy course: "Code with Node  by Ian Schoonover."
+## Portfolio Website
 
-Features of this app:
-Surfs page, ability to add and views surfs all over the world.
-Authentication
-Authorization 
-Need an account to create ,comment,edit,delete post
-Search existing surf boards with location, price ratings.
-View the location using Mapbox API. 
-Flash messages
-async functions
+<b>Built with</b> 
 
-Other features:
-Bootstrap (along with a free theme)
-method-override 
-cloudinary
-ejs 
-Mapbox API
-mongoose 
-passport
-passport-local-mongoose 
-express-session
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+
+<b>Completed as part of the Udemy course ‘Code with Node’ by Ian Schoonover.</b>
+
+- This app features the ability to add and view surfs worldwide, with authentication and authorization using passportJS.
+- Users can search for surfboards by location, price, and ratings, and view locations using the Mapbox API.
